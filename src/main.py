@@ -65,5 +65,38 @@ async def test_agent():
     print("FINAL RESPONSE:")
     print(final_response)
 
+async def test_agent_invocation(query:str):
+
+    langfuse_client = Langfuse()
+    handler = CallbackHandler()
+
+    inputs = {"messages": [HumanMessage(content=query)]}
+
+    print("Testing streaming output:")
+    final_response = None
+
+    try:
+        async for output in agent_executor.astream(inputs, config={"callbacks": [handler]}):
+            for key, value in output.items():
+                print(f"\n--- Node: {key} ---")
+                if "messages" in value:
+                    last_msg = value["messages"][-1]
+                    print(f"Message: {last_msg.content}")
+                    if hasattr(last_msg, "tool_calls") and last_msg.tool_calls:
+                        print(f"Tool Calls: {last_msg.tool_calls}")
+
+                    # respuesta final = nodo agent + tiene contenido + sin tool_calls
+                    if (
+                        key == "agent"
+                        and last_msg.content
+                        and not getattr(last_msg, "tool_calls", None)
+                    ):
+                        final_response = last_msg.content
+
+    finally:
+        langfuse_client.flush()
+
+    return final_response
+
 if __name__ == "__main__":
     asyncio.run(test_agent())

@@ -44,11 +44,13 @@ PINECONE_REGION=us-east-1
 tech42-agent/
 ├── data/
 │   └── pdfs/           # Document source for RAG (PDFs)
+├── notebooks/
+│   └── demo_api.ipynb  # Notebook demo API usage
 ├── src/
 │   ├── agent/          # LangGraph logic and tools
 |   |   ├── prompts.py       # System prompt for the agent
 |   |   ├── state.py         # State definition for the agent
-│   │   ├── finance_tools.py # toos & yfinance integration
+|   |   ├── finance_tools.py # toos & yfinance integration
 │   │   ├── tools.py         # Main tool registry & calls 
 │   │   └── workflow.py      # ReAct + LangGraph StateGraph (agent graph)
 |   |---core

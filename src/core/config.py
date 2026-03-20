@@ -23,6 +23,11 @@ class LangfuseSettings:
     LANGFUSE_SECRET_KEY = os.getenv("LANGFUSE_SECRET_KEY")
     LANGFUSE_HOST = os.getenv("LANGFUSE_HOST", "https://cloud.langfuse.com")
 
+# Cognito Settings
+COGNITO_USER_POOL_ID = os.getenv("COGNITO_USER_POOL_ID")
+COGNITO_APP_CLIENT_ID = os.getenv("COGNITO_APP_CLIENT_ID")
+COGNITO_REGION = os.getenv("COGNITO_REGION", "us-east-1")
+
 settings = LangfuseSettings()
 
 if __name__ =='__main__':
