@@ -1,6 +1,6 @@
 from langchain_openai import OpenAIEmbeddings
 
-from src.config import OPEN_API_KEY
+from src.core.config import OPEN_API_KEY
 
 
 def get_embeddings_models():

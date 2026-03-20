@@ -43,7 +43,7 @@ def test_pipe(query: str):
 if __name__=="__main__":
     # test_rag()
 
-    human_query = "how much the AWS sales increase in percentage in the 2024?"
+    human_query = "Compare Amazon's recent stock performance to what analysts predicted in their reports"
     test_pipe(human_query)
 
 ## running this module: using module "-m"

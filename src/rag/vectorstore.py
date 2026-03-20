@@ -1,7 +1,7 @@
 from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone, ServerlessSpec
 
-from src.config import PINECONE_API_KEY, PINECONE_INDEX_NAME, PINECONE_REGION
+from src.core.config import PINECONE_API_KEY, PINECONE_INDEX_NAME, PINECONE_REGION
 from src.rag.embeddings import get_embeddings_models
 
 

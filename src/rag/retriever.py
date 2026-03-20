@@ -1,5 +1,5 @@
 from src.rag.vectorstore import get_vectorstore
-from src.config import PINECONE_INDEX_NAME
+from src.core.config import PINECONE_INDEX_NAME
 # # inicializar UNA VEZ (singleton simple)
 # _vectorstore = get_vectorstore()
 

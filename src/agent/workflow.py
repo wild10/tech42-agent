@@ -1,10 +1,10 @@
 from typing import Annotated, TypedDict, List
-from langchain_core.messages import BaseMessage, HumanMessage
+from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from langgraph.graph import StateGraph, END
 from langgraph.prebuilt import ToolNode
-from src.llm import get_llm
+from src.core.llm import get_llm
 from src.agent.tools import get_tools
-# from langfuse.decorators import observe
+from src.agent.prompts import SYSTEM_PROMPT
 
 # Define the State
 class AgentState(TypedDict):
@@ -14,12 +14,16 @@ class AgentState(TypedDict):
     messages: Annotated[List[BaseMessage], lambda x, y: x + y]
 
 # Define the nodes
-# @observe(name="agent_llm_step")
 def call_model(state: AgentState):
     """
     Calls the LLM to decide the next action.
     """
     messages = state["messages"]
+    
+    # Prepend system prompt if not present
+    if not any(isinstance(msg, SystemMessage) for msg in messages):
+        messages = [SystemMessage(content=SYSTEM_PROMPT)] + messages
+        
     llm = get_llm()
     # Bind tools to the LLM
     tools = get_tools()

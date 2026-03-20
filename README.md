@@ -5,9 +5,11 @@ This project is an agentic chat assistant designed to help users with financial 
 ## 🚀 Features
 
 - **RAG Pipeline**: Processes PDFs to provide context-aware answers.
-- **Agentic Logic**: Uses LangGraph to decide when to retrieve information or use tools.
+- **Finance Tools**: Real-time and historical stock price retrieval via `yfinance`.
+- **Agentic Logic**: Uses LangGraph to decide when to retrieve information, check stock prices, or continue reasoning.
 - **Vector Search**: Integrated with Pinecone for efficient document retrieval.
-- **Modern Stack**: Built with LangChain, OpenAI, and Poetry.
+- **MCP Ready**: Structured to easily transition to Model Context Protocol for tool scaling.
+- **Monitoring**: Performance tracking with Langfuse.
 
 ## 🛠️ Installation
 
@@ -41,12 +43,20 @@ PINECONE_REGION=us-east-1
 ```text
 tech42-agent/
 ├── data/
-│   └── pdfs/           # Document source for RAG
+│   └── pdfs/           # Document source for RAG (PDFs)
 ├── src/
 │   ├── agent/          # LangGraph logic and tools
-│   │   ├── tools.py
-│   │   └── workflow.py
-│   ├── rag/            # RAG Pipeline components
+|   |   ├── prompts.py       # System prompt for the agent
+|   |   ├── state.py         # State definition for the agent
+│   │   ├── finance_tools.py # toos & yfinance integration
+│   │   ├── tools.py         # Main tool registry & calls 
+│   │   └── workflow.py      # ReAct + LangGraph StateGraph (agent graph)
+|   |---core
+│   |   ├── config.py        # Configuration loader
+│   |   ├── llm.py           # LLM Factory
+│   |---observability
+│   |   ├── langfuse.py      # Langfuse integration
+│   |---rag/                 # RAG Pipeline components
 │   │   ├── embeddings.py
 │   │   ├── ingest.py
 │   │   ├── loader.py
@@ -54,15 +64,16 @@ tech42-agent/
 │   │   ├── retriever.py
 │   │   ├── splitter.py
 │   │   └── vectorstore.py
-│   ├── config.py       # Configuration loader
-│   ├── ingest_docs.py  # Main ingestion script
-│   ├── llm.py          # LLM Factory
-│   ├── main.py         # Entry point for the agent
-│   └── test_rag.py     # RAG testing script
-├── .env                # Environment variables (ignored by git)
-├── .gitignore          # Git ignore rules
-├── pyproject.toml      # Project dependencies and configuration
-└── README.md           # This file
+|   |-- tests
+│   |   ├── test_agent.py      # Test Agent + Langfuse
+│   |   ├── test_rag.py        # Test RAG + Pinecone
+│   |   └── test_finance.py    # Test yfinance api as function.
+│   ├── ingest_docs.py         # Main ingestion PDFS, Docs to Pinecone
+│   ├── main.py                # Entry point for the agent
+├── .env                       # Environment variables (ignored by git)
+├── .gitignore                 # Git ignore rules
+├── pyproject.toml               # Project dependencies and configuration
+└── README.md                    # This file
 ```
 
 ## 🚀 Usage

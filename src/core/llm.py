@@ -3,7 +3,7 @@ from langchain_openai import ChatOpenAI
 from openai import OpenAI
 
 
-from src.config import OPEN_API_KEY
+from src.core.config import OPEN_API_KEY
 
 client = OpenAI(api_key=OPEN_API_KEY)
 

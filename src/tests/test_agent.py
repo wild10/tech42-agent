@@ -10,7 +10,7 @@ from langfuse.langchain import CallbackHandler  # ✅
 handler = CallbackHandler()
 
 async def test_agent():
-    query = "how much the AWS sales increase in percentage in the 2024?"
+    query = "Compare Amazon's recent stock performance to what analysts predicted in their reports"
     inputs = {"messages": [HumanMessage(content=query)]}
     
     # Test streaming
@@ -25,6 +25,8 @@ async def test_agent():
                 print(f"Message: {last_msg.content}")
                 if hasattr(last_msg, "tool_calls") and last_msg.tool_calls:
                     print(f"Tool Calls: {last_msg.tool_calls}")
+
+                    
 
 if __name__ == "__main__":
     asyncio.run(test_agent())
