@@ -48,7 +48,6 @@ desktop.ini
 # Data and Logs
 data/
 notebooks/create_cognito_using_cli.md
-notebooks/demo_invocation.ipynb
 logs/
 *.log
 *.sqlite

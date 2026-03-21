@@ -1,0 +1,34 @@
+# Secrets — nunca al contenedor
+.env
+secret.txt
+
+# Git
+.git
+.gitignore
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.so
+
+# No necesarios en el contenedor
+notebooks/
+data/
+logs/
+*.log
+*.sqlite
+
+# Dev tools
+.vscode/
+.idea/
+.DS_Store
+
+# Poetry — ya tienes requirements.txt
+pyproject.toml
+poetry.lock
+
+# Tests — opcional, depende si los corres en CI
+src/tests/
+
+# Docs
+README.md
