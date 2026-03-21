@@ -1,53 +1,68 @@
-# Environment variables / Secrets
+# ── Secrets & Environment ────────────────────────────────────────
 .env
+.env.*
+!.env.example
 secret.txt
 
-# Virtual environments
-.venv/
-venv/
-env/
-bin/
-lib/
-share/
-Include/
-
-# Build and distribution
-dist/
-build/
-*.egg-info/
-egg-info/
-nosetests.xml
-coverage.xml
-*,cover
-.hypothesis/
-.pytest_cache/
-.tox/
-
-# Python cache and artifacts
+# ── Python ───────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
 
-# IDEs and Editors
+# ── Virtual environments ─────────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── Build & Distribution ─────────────────────────────────────────
+dist/
+build/
+*.egg-info/
+
+# ── Testing & Coverage ───────────────────────────────────────────
+.pytest_cache/
+.tox/
+.hypothesis/
+coverage.xml
+nosetests.xml
+htmlcov/
+
+# ── uv ───────────────────────────────────────────────────────────
+.python-version
+
+# ── Terraform ────────────────────────────────────────────────────
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.backup
+**/*.tfvars
+!terraform.tfvars.example
+**/.terraform.lock.hcl
+*.tfplan
+
+# ── Jupyter ──────────────────────────────────────────────────────
+.ipynb_checkpoints/
+notebooks/create_cognito_using_cli.md
+notebooks/demo.ipynb
+
+# ── IDEs & Editors ───────────────────────────────────────────────
 .vscode/
 .idea/
 *.swp
 *.swo
-.project
-.pydevproject
-.settings/
-.ipynb_checkpoints/
 
-# OS files
+# ── OS ───────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# Data and Logs
+# ── Data & Logs ──────────────────────────────────────────────────
 data/
-notebooks/create_cognito_using_cli.md
 logs/
+src/infra/
 *.log
 *.sqlite
+
+# ── Misc ─────────────────────────────────────────────────────────
+pyproject copy.toml

@@ -1,5 +1,7 @@
 # Secrets — nunca al contenedor
 .env
+.venv
+.python-version
 secret.txt
 
 # Git
@@ -13,7 +15,6 @@ __pycache__/
 
 # No necesarios en el contenedor
 notebooks/
-data/
 logs/
 *.log
 *.sqlite
@@ -23,12 +24,8 @@ logs/
 .idea/
 .DS_Store
 
-# Poetry — ya tienes requirements.txt
-pyproject.toml
-poetry.lock
-
 # Tests — opcional, depende si los corres en CI
 src/tests/
-
-# Docs
-README.md
+src/infra/
+notebooks/
+*.md 

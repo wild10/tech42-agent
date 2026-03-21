@@ -45,7 +45,7 @@ tech42-agent/
 ├── data/
 │   └── pdfs/           # Document source for RAG (PDFs)
 ├── notebooks/
-│   └── demo_api.ipynb  # Notebook demo API usage
+│   └── demo_invocation.ipynb  # Notebook demo API usage
 ├── src/
 |   |-- api/
 |   |   |-- main.py
@@ -65,6 +65,9 @@ tech42-agent/
 |   |---core
 │   |   ├── config.py        # Configuration loader
 │   |   ├── llm.py           # LLM Factory
+|   |---infra/
+|   |   ├── main.tf          # Provider AWS + configuración general
+|   |   |-- variable
 │   |---observability
 │   |   ├── langfuse.py      # Langfuse integration
 │   |---rag/                 # RAG Pipeline components
@@ -82,6 +85,8 @@ tech42-agent/
 │   ├── ingest_docs.py         # Main ingestion PDFS, Docs to Pinecone
 │   ├── main.py                # Entry point for the agent
 ├── .env                       # Environment variables (ignored by git)
+├── .dockerignore              # Docker ignore rules
+├── Dockerfile                 # Dockerfile
 ├── .gitignore                 # Git ignore rules
 ├── pyproject.toml               # Project dependencies and configuration
 └── README.md                    # This file
@@ -96,16 +101,32 @@ Place your PDFs in `data/pdfs/` and run the ingestion script to populate the vec
 python src/ingest_docs.py
 ```
 
-### 2. Run the Agent
-Start the interactive chat agent:
+### 2. Run every module
+
+to test every module using poetry o uv you must follow them 
 
 ```bash
-python src/main.py
+    # with poetry 
+    poetry run python folder/file.py
+    #example
+    poetry run python -m src.main.py
 ```
 
-### 3. Testing
-Run the RAG test script to verify retrieval and generation:
+### 3. Creating the docker
+As we are using uv for fast manage and independency  you create a easy way
+using docker image and run it using  below code
 
 ```bash
-python src/test_rag.py
+    #build 
+    docker build -t tech42-agent .
+    #run 
+    docker run --env-file .env -p 8000:8000 tech42-agent
 ```
+
+### 4 Access user for cognito
+
+user1: teach42@gmail.com
+password: Tech421!
+
+user2: test12@gmail.com
+password: test12AI!
