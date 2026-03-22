@@ -44,6 +44,15 @@ PINECONE_REGION=us-east-1
 tech42-agent/
 ├── data/
 │   └── pdfs/           # Document source for RAG (PDFs)
+├── infra/
+│   ├── main.tf         # Provider AWS + backend config.
+│   |-- variables.tf    # Variables for the infra.
+│   |-- ecr.tf          # ECR repository config.
+|   |-- iam.tf          # IAM roles and policies config.
+|   |-- cognito.tf      # Cognito User Pool + Client 
+│   |-- agentcore.tf    # AgentCore Runtime
+│   |-- outputs.tf      # Outputs (endpoint, URL,ECR URL etc)
+|   |-- terraform.tfvars # Real values (not in git)
 ├── notebooks/
 │   └── demo_invocation.ipynb  # Notebook demo API usage
 ├── src/
@@ -65,9 +74,6 @@ tech42-agent/
 |   |---core
 │   |   ├── config.py        # Configuration loader
 │   |   ├── llm.py           # LLM Factory
-|   |---infra/
-|   |   ├── main.tf          # Provider AWS + configuración general
-|   |   |-- variable
 │   |---observability
 │   |   ├── langfuse.py      # Langfuse integration
 │   |---rag/                 # RAG Pipeline components
@@ -120,13 +126,52 @@ using docker image and run it using  below code
     #build 
     docker build -t tech42-agent .
     #run 
-    docker run --env-file .env -p 8000:8000 tech42-agent
+    docker run --env-file .env -p 8080:8080 tech42-agent
 ```
 
-### 4 Access user for cognito
+### 4 Test Registered and Access user for cognito
+
+these below emails were setup for test purposes of login and access to the API.
 
 user1: teach42@gmail.com
 password: Tech421!
 
 user2: test12@gmail.com
 password: test12AI!
+
+
+# Deployment procedure aws agentcore
+
+# 1. Create the  ECR resource using terraform
+terraform apply -target=aws_ecr_repository.tech42_agent
+
+Outputs:
+
+ecr_repository_url = "129987787606.dkr.ecr.us-east-1.amazonaws.com/tech42_agent-prod"
+# 2. From the root of the project — build and push your image
+cd ..
+docker build -t tech42_agent-prod .
+
+the image must be in arm64 architecture 
+
+# Build para arm64( (udpate, build an push to ecr)
+docker buildx build --platform linux/arm64 \
+  -t 129987787606.dkr.ecr.us-east-1.amazonaws.com/tech42_agent-prod:latest \
+  --push \
+  .
+
+# 3. Login to ECR 
+aws ecr get-login-password --region us-east-1 | \
+  docker login --username AWS --password-stdin \
+  129987787606.dkr.ecr.us-east-1.amazonaws.com
+
+# 4. Tag and push
+docker tag tech42_agent-prod:latest \
+  129987787606.dkr.ecr.us-east-1.amazonaws.com/tech42_agent-prod:latest
+
+docker push \
+  129987787606.dkr.ecr.us-east-1.amazonaws.com/tech42_agent-prod:latest
+
+# 5. Deploy the rest
+cd infra/
+terraform apply

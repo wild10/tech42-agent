@@ -1,0 +1,24 @@
+# aws resources 
+aws_region   = "us-east-1"
+environment  = "prod"
+project_name = "tech42_agent"
+
+# llms openai
+openai_api_key = "your_openai_api_key"
+
+# observability langfuse
+langfuse_secret_key = "your_langfuse_secret_key"
+langfuse_public_key = "your_langfuse_public_key"
+langfuse_base_url   = "your_langfuse_base_url"
+langfuse_enabled    = "true"
+
+# vector database pinecone
+pinecone_api_key    = "your_pinecone_api_key"
+pinecone_index_name = "your_pinecone_index_name"
+pinecone_region     = "your_pinecone_region"
+
+# aws cognito
+cognito_region         = "us-east-1"
+cognito_user_pool_name = "your_cognito_userpool"
+cognito_client_id      = "your_cognito_client_id"
+cognito_client_secret  = "your_client_secret_key_aosdfadfa..."
