@@ -3,8 +3,31 @@ import os
 
 from dotenv import load_dotenv
 
+#adding 
+import json 
+
+def load_secrets():
+    secret_arn = os.getenv("SECRET_ARN")
+    if secret_arn:
+        import boto3
+        try:
+            client = boto3.client('secretsmanager', region_name="us-east-1")
+            response = client.get_secret_value(SecretId=secret_arn)
+            secrets = json.loads(response['SecretString'])
+            for key, value in secrets.items():
+                os.environ[key] = str(value)
+            logging.info("✅ Secrets loaded from AWS Secrets Manager")
+        except Exception as e:
+            logging.error(f"❌ Failed to load secrets: {e}")
+    else:
+        load_dotenv()
+        logging.info("✅ Secrets loaded from .env")
+
+load_secrets()
+
+
 # load var in env.
-load_dotenv()
+# load_dotenv()
 
 
 ## load the credentials from the local env.

@@ -3,7 +3,7 @@
 .env.*
 !.env.example
 secret.txt
-
+.lock
 # ── Python ───────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
@@ -44,7 +44,6 @@ htmlcov/
 # ── Jupyter ──────────────────────────────────────────────────────
 .ipynb_checkpoints/
 notebooks/create_cognito_using_cli.md
-notebooks/demo.ipynb
 
 # ── IDEs & Editors ───────────────────────────────────────────────
 .vscode/
@@ -59,6 +58,8 @@ desktop.ini
 
 # ── Data & Logs ──────────────────────────────────────────────────
 data/
+tests/
+
 logs/
 src/infra/
 *.log

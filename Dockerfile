@@ -1,5 +1,6 @@
 # ─── Builder ─────────────────────────────────────────────────────
-FROM python:3.11-slim AS builder
+# FROM python:3.11-slim AS builder
+FROM --platform=linux/arm64 python:3.11-slim AS builder
 
 WORKDIR /app
 
@@ -24,7 +25,8 @@ COPY src/ ./src/
 RUN uv sync --frozen --no-dev
 
 # ─── Runtime ─────────────────────────────────────────────────────
-FROM python:3.11-slim AS runtime
+# FROM python:3.11-slim AS runtime
+FROM --platform=linux/arm64 python:3.11-slim AS runtime
 
 WORKDIR /app
 
@@ -49,4 +51,5 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8080/health || exit 1
 
-CMD ["uvicorn", "src.api.app:app", "--host", "0.0.0.0", "--port", "8080"]
+# CMD ["uvicorn", "src.api.app:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["opentelemetry-instrument", "uvicorn", "src.api.app:app", "--host", "0.0.0.0", "--port", "8080"]

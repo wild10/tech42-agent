@@ -28,4 +28,5 @@ logs/
 src/tests/
 src/infra/
 notebooks/
+tests/
 *.md 

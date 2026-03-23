@@ -17,18 +17,18 @@ resource "aws_bedrockagentcore_agent_runtime" "tech42_runtime" {
     network_mode = "PUBLIC"
   }
 
-  # Only cognito will call my API
-  authorizer_configuration {
-    custom_jwt_authorizer {
-      discovery_url    = "https://cognito-idp.${var.aws_region}.amazonaws.com/${data.aws_cognito_user_pools.tech42_pool.ids[0]}/.well-known/openid-configuration"
-      allowed_audience = [var.cognito_client_id]
-    }
-  }
 
+  #setup environment variables
   environment_variables = {
     ENVIRONMENT = var.environment
+    SECRET_ARN  = aws_secretsmanager_secret.tech42_secrets.arn
   }
 
+
+  # Agentcore inject secrets as env vars
+  #secret_arn = aws_secretsmanager_secret.tech42_secrets.arn
+
+  # setup tags name
   tags = {
     Name = "${var.project_name}_runtime"
   }
