@@ -5,6 +5,7 @@ from langchain_core.messages import HumanMessage
 from src.agent.workflow import agent_executor
 from src.api.schemas import AgentInvokeRequest, AgentFinalResponse, AgentStepResponse, ToolCallInfo
 from src.api.middleware.auth import get_current_user
+from src.observability.langfuse_handler import get_callbacks
 
 router = APIRouter(prefix="/agent", tags=["agent"])
 
@@ -17,7 +18,8 @@ async def invoke_agent(request: AgentInvokeRequest, user: dict = Depends(get_cur
     config = {"configurable": {"thread_id": request.thread_id}} if request.thread_id else {}
     
     try:
-        result = await agent_executor.ainvoke(inputs, config=config)
+        callbacks = get_callbacks()
+        result = await agent_executor.ainvoke(inputs, config={"configurable": {"thread_id": request.thread_id}, "callbacks": callbacks} if request.thread_id else {"callbacks": callbacks})
         
         messages = result["messages"]
         final_response = ""
@@ -52,7 +54,10 @@ async def stream_agent(request: AgentInvokeRequest, user: dict = Depends(get_cur
 
     async def event_generator():
         try:
-            async for output in agent_executor.astream(inputs, config=config):
+            callbacks = get_callbacks()
+            full_config = config.copy()
+            full_config["callbacks"] = callbacks
+            async for output in agent_executor.astream(inputs, config=full_config):
                 for key, value in output.items():
                     data = {
                         "node": key,

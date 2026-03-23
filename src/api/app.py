@@ -6,6 +6,7 @@ from fastapi import Request, Depends
 from fastapi.responses import StreamingResponse
 from langchain_core.messages import HumanMessage
 from src.api.middleware.auth import get_current_user
+from src.observability.langfuse_handler import get_callbacks
 import json
 
 app = FastAPI(
@@ -45,17 +46,21 @@ async def ping():
 async def invocations(request: Request):
     """AgentCore main invocation endpoint"""
     from src.agent.workflow import agent_executor
-    
+    # Get user prompt
+    user = await get_current_user(request)
     body = await request.json()
     query = body.get("prompt") or body.get("query") or body.get("input", "")
     thread_id = body.get("thread_id", None)
-    
+    # turn to HumanMessage
     inputs = {"messages": [HumanMessage(content=query)]}
     config = {"configurable": {"thread_id": thread_id}} if thread_id else {}
-
+    # run the agent workflow event by event(node,messages)
     async def event_generator():
         try:
-            async for output in agent_executor.astream(inputs, config=config):
+            callbacks = get_callbacks()
+            full_config = config.copy()
+            full_config["callbacks"] = callbacks
+            async for output in agent_executor.astream(inputs, config=full_config):
                 for key, value in output.items():
                     data = {
                         "node": key,

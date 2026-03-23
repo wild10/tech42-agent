@@ -4,19 +4,17 @@ logging.getLogger("opentelemetry").setLevel(logging.CRITICAL)
 import asyncio
 from langchain_core.messages import HumanMessage
 from src.agent.workflow import agent_executor
-from langfuse.langchain import CallbackHandler
-from langfuse import Langfuse
+from src.observability.langfuse_handler import get_callbacks, flush
 
 async def test_agent1():
-    Langfuse_client = Langfuse()
-    handler = CallbackHandler()  # instancia dentro del async context, no fuera
+    callbacks = get_callbacks()
     
     query = "how much the AWS sales increase in percentage in the 2024?"
     inputs = {"messages": [HumanMessage(content=query)]}
     
     print("Testing streaming output:")
     try:
-        async for output in agent_executor.astream(inputs, config={"callbacks": [handler]}):
+        async for output in agent_executor.astream(inputs, config={"callbacks": callbacks}):
             for key, value in output.items():
                 print(f"\n--- Node: {key} ---")
                 if "messages" in value:
@@ -25,11 +23,10 @@ async def test_agent1():
                     if hasattr(last_msg, "tool_calls") and last_msg.tool_calls:
                         print(f"Tool Calls: {last_msg.tool_calls}")
     finally:
-        Langfuse_client.flush()  # garantiza flush incluso si hay excepción
+        flush()
 
 async def test_agent():
-    langfuse_client = Langfuse()
-    handler = CallbackHandler()
+    callbacks = get_callbacks()
 
     my_query2 = "What were the stock prices for Amazon in Q4 last year?"
     my_query4 = "I’m researching AMZN give me the current price and any relevant information about their AI business"
@@ -41,7 +38,7 @@ async def test_agent():
     final_response = None
 
     try:
-        async for output in agent_executor.astream(inputs, config={"callbacks": [handler]}):
+        async for output in agent_executor.astream(inputs, config={"callbacks": callbacks}):
             for key, value in output.items():
                 print(f"\n--- Node: {key} ---")
                 if "messages" in value:
@@ -59,16 +56,14 @@ async def test_agent():
                         final_response = last_msg.content
 
     finally:
-        langfuse_client.flush()
+        flush()
 
     print("\n" + "="*40)
     print("FINAL RESPONSE:")
     print(final_response)
 
 async def test_agent_invocation(query:str):
-
-    langfuse_client = Langfuse()
-    handler = CallbackHandler()
+    callbacks = get_callbacks()
 
     inputs = {"messages": [HumanMessage(content=query)]}
 
@@ -76,7 +71,7 @@ async def test_agent_invocation(query:str):
     final_response = None
 
     try:
-        async for output in agent_executor.astream(inputs, config={"callbacks": [handler]}):
+        async for output in agent_executor.astream(inputs, config={"callbacks": callbacks}):
             for key, value in output.items():
                 print(f"\n--- Node: {key} ---")
                 if "messages" in value:
@@ -94,7 +89,7 @@ async def test_agent_invocation(query:str):
                         final_response = last_msg.content
 
     finally:
-        langfuse_client.flush()
+        flush()
 
     return final_response
 

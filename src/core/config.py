@@ -1,5 +1,6 @@
 import logging
 import os
+os.environ["OTEL_PYTHON_CONTEXT"] = "asyncio"
 
 from dotenv import load_dotenv
 
