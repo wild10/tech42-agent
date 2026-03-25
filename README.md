@@ -53,7 +53,6 @@ tech42-agent/
 │   └── demo_invocation_local.ipynb  # Notebook demo local usage
 ├── src/
 |   |-- api/
-|   |   |-- main.py
 |   |   |-- middleware/
 |   |   |   |-- auth.py 
 |   |   |-- routes/ 
@@ -135,9 +134,9 @@ Allowed user for testing:
 
 user1: teach42@gmail.com
 password: Tech421!
-
+<!-- 
 user2: test12@gmail.com
-password: test12AI!
+password: test12AI! -->
 
 user1: user@gmail.com
 password: [PASSWORD]
